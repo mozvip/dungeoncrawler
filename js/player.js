@@ -21,6 +21,15 @@ class Player {
         this.rotationEndAngle = 0;
         this.rotationProgress = 0;
         this.rotationDuration = 300; // milliseconds
+
+        // Movement animation properties
+        this.isMoving = false;
+        this.moveStartX = 0;
+        this.moveStartZ = 0;
+        this.moveEndX = 0;
+        this.moveEndZ = 0;
+        this.moveProgress = 0;
+        this.moveDuration = 300; // milliseconds
     }
 
     // Link camera to player
@@ -33,29 +42,39 @@ class Player {
     updateCameraPosition() {
         if (!this.camera) return;
         
-        this.camera.position.set(this.x, this.height, this.z);
+        // Only update position directly if not in the middle of a movement animation
+        if (!this.isMoving) {
+            this.camera.position.set(this.x, this.height, this.z);
+        } else {
+            // Just update the height
+            this.camera.position.y = this.height;
+        }
         
-        // Set rotation based on direction
-        if (this.direction === 0) { // North
-            this.camera.rotation.y = 0;
-        } else if (this.direction === 1) { // East
-            this.camera.rotation.y = -Math.PI / 2;
-        } else if (this.direction === 2) { // South
-            this.camera.rotation.y = Math.PI;
-        } else { // West
-            this.camera.rotation.y = Math.PI / 2;
+        // Set rotation based on direction only if not in the middle of a rotation animation
+        if (!this.isRotating) {
+            if (this.direction === 0) { // North
+                this.camera.rotation.y = 0;
+            } else if (this.direction === 1) { // East
+                this.camera.rotation.y = -Math.PI / 2;
+            } else if (this.direction === 2) { // South
+                this.camera.rotation.y = Math.PI;
+            } else { // West
+                this.camera.rotation.y = Math.PI / 2;
+            }
         }
     }
 
     // Move forward in the current direction
     moveForward() {
+        // Don't allow moving while a movement or rotation is in progress
+        if (this.isMoving || this.isRotating) return false;
+        
         const nextX = this.getForwardPosition().x;
         const nextZ = this.getForwardPosition().z;
         
         if (this.dungeon.isValidPosition(nextX, nextZ)) {
-            this.x = nextX;
-            this.z = nextZ;
-            this.updateCameraPosition();
+            // Start movement animation
+            this.startMovementAnimation(this.x, this.z, nextX, nextZ);
             this.updateCompass();
             return true;
         }
@@ -64,13 +83,15 @@ class Player {
 
     // Move backward in the current direction
     moveBackward() {
+        // Don't allow moving while a movement or rotation is in progress
+        if (this.isMoving || this.isRotating) return false;
+        
         const nextX = this.getBackwardPosition().x;
         const nextZ = this.getBackwardPosition().z;
         
         if (this.dungeon.isValidPosition(nextX, nextZ)) {
-            this.x = nextX;
-            this.z = nextZ;
-            this.updateCameraPosition();
+            // Start movement animation
+            this.startMovementAnimation(this.x, this.z, nextX, nextZ);
             this.updateCompass();
             return true;
         }
@@ -79,13 +100,15 @@ class Player {
 
     // Strafe left (perpendicular to current direction)
     strafeLeft() {
+        // Don't allow moving while a movement or rotation is in progress
+        if (this.isMoving || this.isRotating) return false;
+        
         const nextX = this.getLeftPosition().x;
         const nextZ = this.getLeftPosition().z;
         
         if (this.dungeon.isValidPosition(nextX, nextZ)) {
-            this.x = nextX;
-            this.z = nextZ;
-            this.updateCameraPosition();
+            // Start movement animation
+            this.startMovementAnimation(this.x, this.z, nextX, nextZ);
             this.updateCompass();
             return true;
         }
@@ -94,13 +117,15 @@ class Player {
 
     // Strafe right (perpendicular to current direction)
     strafeRight() {
+        // Don't allow moving while a movement or rotation is in progress
+        if (this.isMoving || this.isRotating) return false;
+        
         const nextX = this.getRightPosition().x;
         const nextZ = this.getRightPosition().z;
         
         if (this.dungeon.isValidPosition(nextX, nextZ)) {
-            this.x = nextX;
-            this.z = nextZ;
-            this.updateCameraPosition();
+            // Start movement animation
+            this.startMovementAnimation(this.x, this.z, nextX, nextZ);
             this.updateCompass();
             return true;
         }
@@ -215,6 +240,54 @@ class Player {
         
         // Set the camera rotation
         this.camera.rotation.y = currentAngle;
+    }
+
+    // Start a movement animation from one position to another
+    startMovementAnimation(fromX, fromZ, toX, toZ) {
+        if (!this.camera) return;
+        
+        // Set up animation parameters
+        this.isMoving = true;
+        this.moveProgress = 0;
+        this.moveStartX = fromX;
+        this.moveStartZ = fromZ;
+        this.moveEndX = toX;
+        this.moveEndZ = toZ;
+        
+        // Store the final position for when animation completes
+        this.x = toX;
+        this.z = toZ;
+    }
+    
+    // Update the movement animation - call this from the game loop
+    updateMovement(deltaTime) {
+        if (!this.isMoving || !this.camera) return;
+        
+        // Calculate how much progress to add based on delta time
+        const progressIncrement = deltaTime / this.moveDuration;
+        this.moveProgress += progressIncrement;
+        
+        // Clamp progress to 1.0
+        if (this.moveProgress >= 1.0) {
+            this.moveProgress = 1.0;
+            this.isMoving = false;
+            
+            // Ensure we end exactly at the target position
+            this.camera.position.x = this.moveEndX;
+            this.camera.position.z = this.moveEndZ;
+            return;
+        }
+        
+        // Use an easing function for smoother motion
+        const easedProgress = this.easeInOutQuad(this.moveProgress);
+        
+        // Interpolate between start and end positions
+        const currentX = this.moveStartX + (this.moveEndX - this.moveStartX) * easedProgress;
+        const currentZ = this.moveStartZ + (this.moveEndZ - this.moveStartZ) * easedProgress;
+        
+        // Set the camera position
+        this.camera.position.x = currentX;
+        this.camera.position.z = currentZ;
     }
     
     // Ease-in-out quadratic interpolation for smoother animation

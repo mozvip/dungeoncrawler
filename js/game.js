@@ -376,6 +376,7 @@ class Game {
         // Update camera rotation animation
         if (this.player) {
             this.player.updateRotation(deltaTime);
+            this.player.updateMovement(deltaTime);
         }
         
         // Update projectiles
