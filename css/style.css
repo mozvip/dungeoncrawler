@@ -1,0 +1,111 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #000;
+    color: white;
+    font-family: 'Courier New', monospace;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+#hud {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 100;
+    user-select: none;
+}
+
+#compass {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid #666;
+    color: #fff;
+}
+
+.direction {
+    position: absolute;
+    font-weight: bold;
+}
+
+#north {
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#east {
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#south {
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#west {
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Dungeon info panel */
+.info-panel {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #666;
+    padding: 15px 20px;
+    border-radius: 5px;
+    text-align: center;
+    transition: opacity 1s ease;
+    max-width: 60%;
+}
+
+#dungeon-info {
+    display: none;
+}
+
+#dungeon-info h2 {
+    color: #ff9900;
+    margin-top: 0;
+    font-size: 1.4em;
+}
+
+#dungeon-info p {
+    margin-bottom: 0;
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+/* Music indicator styles */
+#music-indicator {
+    top: auto;
+    bottom: 20px;
+    right: 20px;
+    left: auto;
+    transform: none;
+    font-size: 0.9em;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+#music-indicator.music-off span {
+    color: #ff6666;
+}
+
+#music-indicator.music-on span {
+    color: #66ff66;
+}

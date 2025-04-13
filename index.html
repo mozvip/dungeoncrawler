@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dunwich Crawler</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="hud">
+            <div id="compass">
+                <div class="direction" id="north">N</div>
+                <div class="direction" id="east">E</div>
+                <div class="direction" id="south">S</div>
+                <div class="direction" id="west">W</div>
+            </div>
+            <div id="dungeon-info" class="info-panel"></div>
+            <div id="music-indicator" class="info-panel">
+                <span>Music: ON</span> <small>(Press 'M' to toggle)</small>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="js/sound.js"></script>
+    <script src="js/projectile.js"></script>
+    <script src="js/projectiles/Fireball.js"></script>
+    <script src="js/projectiles/IceArrow.js"></script>
+    <script src="js/projectiles/Lightning.js"></script>
+    <script src="js/projectiles/GasCloud.js"></script>
+    <script src="js/dungeon.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
