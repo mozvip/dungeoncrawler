@@ -38,6 +38,9 @@ class Game {
         this.lightningCooldown = 0;
         // Gas cloud cooldown
         this.gasCloudCooldown = 0;
+        
+        // Placed torches
+        this.torches = [];
     }
 
     async init() {
@@ -173,6 +176,10 @@ class Game {
             case 'm':
                 // Toggle background music on/off
                 this.soundManager.toggleBackgroundMusic();
+                break;
+            case 't':
+                // Place torch on the wall the player is facing
+                this.placeTorch();
                 break;
         }
     }
@@ -365,6 +372,116 @@ class Game {
         this.soundManager.playGasCloudSound();
     }
 
+    // Place a torch on the wall the player is facing
+    placeTorch() {
+        if (!this.player || !this.dungeon) return;
+        
+        // Get the position in front of the player
+        const forwardPos = this.player.getForwardPosition();
+        
+        // Check if there's a wall in front of the player
+        if (!this.dungeon.isValidPosition(forwardPos.x, forwardPos.z)) {
+            // There's a wall, so we can place a torch on it
+            
+            // Check if there's already a torch at this position
+            const existingTorchIndex = this.torches.findIndex(torch => 
+                torch.wallX === forwardPos.x && torch.wallZ === forwardPos.z && 
+                torch.direction === this.player.direction
+            );
+            
+            if (existingTorchIndex >= 0) {
+                // There's already a torch here, remove it
+                const torch = this.torches[existingTorchIndex];
+                this.scene.remove(torch.mesh);
+                this.scene.remove(torch.light);
+                this.torches.splice(existingTorchIndex, 1);
+                return;
+            }
+            
+            // Create torch mesh
+            const torchGroup = new THREE.Group();
+            
+            // Torch stick (cylinder) - keep it vertical
+            const stickGeometry = new THREE.CylinderGeometry(0.025, 0.025, 0.3, 8);
+            const stickMaterial = new THREE.MeshStandardMaterial({
+                color: 0x8B4513, // Brown wood color
+                roughness: 0.9
+            });
+            const stick = new THREE.Mesh(stickGeometry, stickMaterial);
+            
+            // Torch flame (cone shape) - positioned at the top of the stick
+            const flameGeometry = new THREE.ConeGeometry(0.05, 0.1, 8);
+            const flameMaterial = new THREE.MeshStandardMaterial({
+                color: 0xFF4500, // Orange-red for the burning part
+                emissive: 0xFF2000,
+                emissiveIntensity: 0.5,
+                roughness: 0.7
+            });
+            // rotate the flame to point upwards
+            flameGeometry.rotateX(Math.PI);
+            const head = new THREE.Mesh(flameGeometry, flameMaterial);
+            head.position.set(0, 0.2, 0); // Position at the top of the stick
+            
+            // Add to group
+            torchGroup.add(stick);
+            torchGroup.add(head);
+            
+            // Position the torch on the wall
+            let wallOffset = 0.5; // Half a tile to reach the wall
+            let torchX = this.player.x;
+            let torchZ = this.player.z;
+            let rotation = 0;
+            
+            // Adjust position and rotation based on direction
+            if (this.player.direction === 0) { // North
+                torchZ -= wallOffset;
+                rotation = 0;
+                // Tilt torch slightly forward
+                torchGroup.rotation.x = Math.PI * 0.1;
+            } else if (this.player.direction === 1) { // East
+                torchX += wallOffset;
+                rotation = Math.PI / 2;
+                // Tilt torch slightly forward
+                torchGroup.rotation.z = -Math.PI * 0.1;
+            } else if (this.player.direction === 2) { // South
+                torchZ += wallOffset;
+                rotation = Math.PI;
+                // Tilt torch slightly forward
+                torchGroup.rotation.x = -Math.PI * 0.1;
+            } else { // West
+                torchX -= wallOffset;
+                rotation = -Math.PI / 2;
+                // Tilt torch slightly forward
+                torchGroup.rotation.z = Math.PI * 0.1;
+            }
+            
+            // Apply final position and rotation
+            torchGroup.position.set(torchX, this.player.height, torchZ);
+            torchGroup.rotation.y = rotation;
+            
+            // Create a point light for the torch
+            const torchLight = new THREE.PointLight(0xff6600, 1, 3);
+            torchLight.position.copy(torchGroup.position);
+            
+            // Add height offset to the light to make it appear from the torch head
+            torchLight.position.y += 0.2;
+            
+            // Add to scene
+            this.scene.add(torchGroup);
+            this.scene.add(torchLight);
+            
+            // Store the torch information
+            this.torches.push({
+                mesh: torchGroup,
+                light: torchLight,
+                wallX: forwardPos.x,
+                wallZ: forwardPos.z,
+                direction: this.player.direction,
+                time: 0
+            });
+        }
+    }
+
     gameLoop(timestamp) {
         // Calculate time delta
         const deltaTime = timestamp - this.lastTime;
@@ -386,6 +503,9 @@ class Game {
         if (this.dungeon && this.dungeon.updateTraps) {
             this.dungeon.updateTraps(deltaTime);
         }
+        
+        // Update torch animations
+        this.updateTorches(deltaTime);
         
         // Render the scene
         this.renderer.render(this.scene, this.camera);
@@ -439,6 +559,31 @@ class Game {
             // Remove inactive projectiles
             if (!this.projectiles[i].isActive) {
                 this.projectiles.splice(i, 1);
+            }
+        }
+    }
+
+    updateTorches(deltaTime) {
+        // Update all active torches
+        for (let i = 0; i < this.torches.length; i++) {
+            const torch = this.torches[i];
+            torch.time += deltaTime * 0.01;
+
+            // Animate torch light intensity (flickering effect)
+            const flicker = Math.sin(torch.time) * 0.2 + Math.random() * 0.1 + 0.8;
+            torch.light.intensity = flicker;
+            
+            // Small color variation for a more realistic fire effect
+            const hue = 0.08 + Math.sin(torch.time * 0.5) * 0.01; // Slight hue variation
+            const saturation = 0.9 + Math.sin(torch.time * 0.7) * 0.1; // Saturation variation
+            
+            // Use Three.js Color to adjust the light color
+            torch.light.color.setHSL(hue, saturation, 0.5);
+            
+            // Animate the torch head (flame) with a subtle rotation
+            if (torch.mesh && torch.mesh.children && torch.mesh.children.length > 1) {
+                const head = torch.mesh.children[1]; // The flame/head is the second child
+                head.rotation.z = Math.sin(torch.time * 2) * 0.1;
             }
         }
     }

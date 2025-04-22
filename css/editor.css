@@ -1,0 +1,468 @@
+/* Level Editor Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.editor-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 1rem;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+button, select {
+    padding: 0.5rem 1rem;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2980b9;
+}
+
+select {
+    background: white;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.editor-main {
+    display: flex;
+    flex: 1;
+    gap: 1rem;
+    margin: 1rem 0;
+    overflow: hidden;
+}
+
+.level-properties {
+    width: 300px;
+    padding: 1rem;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow-y: auto;
+}
+
+.input-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.player-start {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.player-start div:last-child {
+    grid-column: span 2;
+}
+
+.map-editor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.tools {
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.tool-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.tool {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.tool.selected {
+    background: #f0f0f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tool-icon {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ccc;
+    margin-bottom: 0.25rem;
+}
+
+.tool-icon.wall {
+    background: #888;
+}
+
+.tool-icon.empty {
+    background: #fff;
+}
+
+.tool-icon.trap {
+    background: #f39c12;
+}
+
+.tool-icon.player {
+    background: #2ecc71;
+    position: relative;
+}
+
+.tool-icon.player:after {
+    content: "P";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+}
+
+.tool-icon.stairs-up, .tool-icon.stairs-down {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    background: #e1e1e1;
+}
+
+.grid-container {
+    flex: 1;
+    overflow: auto;
+    padding: 1rem;
+}
+
+.map-grid {
+    display: grid;
+    gap: 1px;
+    background: #ddd;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.grid-cell {
+    width: 40px;
+    height: 40px;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    position: relative;
+}
+
+.grid-cell.wall {
+    background: #888;
+}
+
+.grid-cell.empty {
+    background: #fff;
+}
+
+.grid-cell.trap {
+    background: #f39c12;
+}
+
+.grid-cell.playerStart {
+    position: relative;
+}
+
+.grid-cell.playerStart:after {
+    content: "P";
+    position: absolute;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7); /* Add text shadow for better visibility */
+    color: #2ecc71; /* Change color to green */
+}
+
+.grid-cell.playerStart.north:after {
+    content: "▲";
+}
+
+.grid-cell.playerStart.east:after {
+    content: "▶";
+}
+
+.grid-cell.playerStart.south:after {
+    content: "▼";
+}
+
+.grid-cell.playerStart.west:after {
+    content: "◀";
+}
+
+/* Add a visual indicator behind the direction arrow for better visibility */
+.grid-cell.playerStart:before {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.grid-cell.stairs-up, .grid-cell.stairs-down {
+    background: #a892c9;
+    position: relative;
+}
+
+.grid-cell.stairs-up:after {
+    content: "🔼";
+    position: absolute;
+    font-size: 1.2rem;
+}
+
+.grid-cell.stairs-down:after {
+    content: "🔽";
+    position: absolute;
+    font-size: 1.2rem;
+}
+
+.status-bar {
+    padding: 0.5rem;
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cell-info {
+    font-family: monospace;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 4px;
+    width: 400px;
+    max-width: 90%;
+}
+
+.modal h2 {
+    margin-bottom: 1rem;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+small {
+    color: #777;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+.coordinates {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 0.6rem;
+    color: #666;
+    background: rgba(255,255,255,0.7);
+    padding: 1px 3px;
+}
+
+/* Make coordinates more visible on dark cells */
+.grid-cell.wall .coordinates, 
+.grid-cell.trap .coordinates {
+    color: white;
+    background: rgba(0,0,0,0.5);
+}
+
+/* Add an outline to the selected cell */
+.grid-cell.selected {
+    outline: 2px solid #3498db;
+    z-index: 1;
+}
+
+/* Wall feature indicators */
+.wall-feature-indicator {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    z-index: 2;
+}
+
+/* Position indicators based on direction */
+.wall-feature-indicator.north {
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.wall-feature-indicator.east {
+    top: 50%;
+    right: 2px;
+    transform: translateY(-50%);
+}
+
+.wall-feature-indicator.south {
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.wall-feature-indicator.west {
+    top: 50%;
+    left: 2px;
+    transform: translateY(-50%);
+}
+
+/* Feature-specific styling */
+.wall-feature-indicator.torch {
+    background: #ff7700;
+    box-shadow: 0 0 5px 2px rgba(255, 119, 0, 0.5);
+}
+
+.wall-feature-indicator.door {
+    background: #8B4513;
+    border-radius: 0;
+    width: 12px;
+    height: 6px;
+}
+
+.wall-feature-indicator.painting {
+    background: #3498db;
+    border-radius: 2px;
+    width: 12px;
+    height: 8px;
+}
+
+/* Wall feature tools */
+#wallFeaturesPanel {
+    display: none;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f5f5f5;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.wall-features-header {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.feature-tools, .direction-tools {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.wall-feature, .wall-direction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background: white;
+    border: 1px solid #ddd;
+}
+
+.wall-feature.selected, .wall-direction.selected {
+    background: #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.feature-icon, .direction-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.feature-icon.torch {
+    color: #ff7700;
+}
+
+.feature-icon.door {
+    color: #8B4513;
+}
+
+.feature-icon.painting {
+    color: #3498db;
+}
+
+.feature-icon.none {
+    color: #999;
+}

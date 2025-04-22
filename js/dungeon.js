@@ -49,28 +49,8 @@ class Dungeon {
             return true;
         } catch (error) {
             console.error("Error loading dungeon data:", error);
-            // Create a default map if loading fails
-            this.createDefaultMap();
             return false;
         }
-    }
-    
-    // Create a default map in case loading fails
-    createDefaultMap() {
-        console.warn("Creating default map");
-        this.name = "Default Dungeon";
-        this.description = "A basic dungeon layout";
-        
-        // Define default dungeon map - 1 is wall, 0 is floor
-        this.map = [
-            [1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 1],
-            [1, 0, 1, 0, 1],
-            [1, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1]
-        ];
-        
-        this.playerStart = { x: 1, z: 1, direction: 0 };
     }
 
     // Initialize textures
@@ -130,9 +110,10 @@ class Dungeon {
         // Create walls
         for (let x = 0; x < this.map.length; x++) {
             for (let z = 0; z < this.map[x].length; z++) {
-                const tileValue = this.map[x][z];
+                const cell = this.map[x][z];
+                const cellType = cell.type;
                 
-                if (tileValue === 1) {
+                if (cellType === "wall") {
                     // Wall cube - using consistent dimensions for square appearance
                     const wallGeometry = new THREE.BoxGeometry(
                         this.wallWidth, 
@@ -144,10 +125,13 @@ class Dungeon {
                     wall.castShadow = true;
                     wall.receiveShadow = true;
                     scene.add(wall);
-                } else {
-                    // For all walkable spaces (0 = normal floor, 2 = trap)
                     
-                    if (tileValue === 2) {
+                    // Process wall face attributes (north, south, east, west)
+                    this.processWallFeatures(scene, x, z, cell);
+                } else {
+                    // For all walkable spaces ("empty" = normal floor, "trap" = trap)
+                    
+                    if (cellType === "trap") {
                         // Create a pit/hole for the trap
                         this.createPit(scene, x, z, pitWallMaterial);
                     } else {
@@ -172,6 +156,165 @@ class Dungeon {
         }
         
         return this.playerStart;
+    }
+
+    // Process special wall features based on directional attributes
+    processWallFeatures(scene, x, z, cell) {
+        // Check and process features for each direction
+        if (cell.north) {
+            this.createWallFeature(scene, x, z, 'north', cell.north);
+        }
+        if (cell.south) {
+            this.createWallFeature(scene, x, z, 'south', cell.south);
+        }
+        if (cell.east) {
+            this.createWallFeature(scene, x, z, 'east', cell.east);
+        }
+        if (cell.west) {
+            this.createWallFeature(scene, x, z, 'west', cell.west);
+        }
+    }
+    
+    // Create a specific wall feature (door, torch, painting, etc.)
+    createWallFeature(scene, x, z, direction, featureType) {
+        // Set positioning parameters based on direction
+        let posX = x;
+        let posZ = z;
+        let rotation = 0;
+        
+        // Adjust position and rotation based on the direction
+        switch (direction) {
+            case 'north':
+                posZ -= 0.5;
+                rotation = 0;
+                break;
+            case 'south':
+                posZ += 0.5;
+                rotation = Math.PI;
+                break;
+            case 'east':
+                posX += 0.5;
+                rotation = Math.PI / 2;
+                break;
+            case 'west':
+                posX -= 0.5;
+                rotation = -Math.PI / 2;
+                break;
+        }
+        
+        // Create different features based on type
+        switch (featureType) {
+            case 'door':
+                this.createDoor(scene, posX, posZ, rotation);
+                break;
+            case 'torch':
+                this.createTorch(scene, posX, posZ, rotation);
+                break;
+            case 'painting':
+                this.createPainting(scene, posX, posZ, rotation);
+                break;
+            // Add more feature types as needed
+            default:
+                console.warn(`Unknown wall feature type: ${featureType}`);
+        }
+    }
+    
+    // Example feature creation methods
+    createDoor(scene, x, z, rotation) {
+        // Placeholder for door creation
+        const doorGeometry = new THREE.BoxGeometry(0.8, 0.9, 0.1);
+        const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+        const door = new THREE.Mesh(doorGeometry, doorMaterial);
+        
+        door.position.set(x, this.wallHeight/2, z);
+        door.rotation.y = rotation;
+        scene.add(door);
+    }
+    
+    createTorch(scene, x, z, rotation) {
+        // Placeholder for torch creation
+        const torchGroup = new THREE.Group();
+        
+        // Torch handle
+        const handleGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.3, 8);
+        const handleMaterial = new THREE.MeshStandardMaterial({ color: 0x4b2822 });
+        const handle = new THREE.Mesh(handleGeometry, handleMaterial);
+        handle.position.y = this.wallHeight/2;
+        
+        // Torch flame
+        const flameGeometry = new THREE.ConeGeometry(0.05, 0.15, 8);
+        const flameMaterial = new THREE.MeshBasicMaterial({ color: 0xff7700 });
+        const flame = new THREE.Mesh(flameGeometry, flameMaterial);
+        flame.position.y = this.wallHeight/2 + 0.2;
+        
+        // Add to group
+        torchGroup.add(handle);
+        torchGroup.add(flame);
+        
+        // Add torch light
+        const torchLight = new THREE.PointLight(0xff5500, 1, 3);
+        torchLight.position.y = this.wallHeight/2 + 0.2;
+        torchGroup.add(torchLight);
+        
+        // Position and rotate the torch group
+        torchGroup.position.set(x, 0, z);
+        torchGroup.rotation.y = rotation;
+        
+        // Adjust position to be flush with wall
+        const offset = 0.51; // Slightly more than half the wall thickness
+        switch (Math.round((rotation / (Math.PI/2)) % 4)) {
+            case 0: // North
+                torchGroup.position.z += offset;
+                break;
+            case 2: case -2: // South
+                torchGroup.position.z -= offset;
+                break;
+            case 1: case -3: // East
+                torchGroup.position.x -= offset;
+                break;
+            case 3: case -1: // West
+                torchGroup.position.x += offset;
+                break;
+        }
+        
+        scene.add(torchGroup);
+        
+        // Store torch for animation
+        if (!this.torches) this.torches = [];
+        this.torches.push({
+            flame,
+            light: torchLight,
+            time: Math.random() * Math.PI * 2
+        });
+    }
+    
+    createPainting(scene, x, z, rotation) {
+        // Placeholder for painting creation
+        const frameGeometry = new THREE.BoxGeometry(0.5, 0.4, 0.05);
+        const frameMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+        const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+        
+        frame.position.set(x, this.wallHeight/2, z);
+        frame.rotation.y = rotation;
+        
+        // Adjust position to be flush with wall
+        const offset = 0.525; // Slightly more than half the wall thickness
+        switch (Math.round((rotation / (Math.PI/2)) % 4)) {
+            case 0: // North
+                frame.position.z += offset;
+                break;
+            case 2: case -2: // South
+                frame.position.z -= offset;
+                break;
+            case 1: case -3: // East
+                frame.position.x -= offset;
+                break;
+            case 3: case -1: // West
+                frame.position.x += offset;
+                break;
+        }
+        
+        scene.add(frame);
     }
 
     // Create a pit/hole for a floor trap
@@ -264,7 +407,7 @@ class Dungeon {
             return false;
         }
         
-        // Check if the position is a walkable tile (0 = floor, 2 = trap)
-        return this.map[x][z] === 0 || this.map[x][z] === 2;
+        // Check if the position is a walkable tile (not a wall)
+        return this.map[x][z].type === "empty" || this.map[x][z].type === "trap";
     }
 }

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dungeon Level Editor</title>
+    <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+    <div class="editor-container">
+        <header>
+            <h1>Dungeon Level Editor</h1>
+            <div class="actions">
+                <button id="newLevel">New Level</button>
+                <select id="levelSelect">
+                    <option value="">Select a level...</option>
+                </select>
+                <button id="saveLevel">Save Level</button>
+            </div>
+        </header>
+        
+        <div class="editor-main">
+            <div class="level-properties">
+                <div class="input-group">
+                    <label for="levelName">Level Name:</label>
+                    <input type="text" id="levelName" placeholder="Enter level name">
+                </div>
+                <div class="input-group">
+                    <label for="levelDescription">Description:</label>
+                    <textarea id="levelDescription" placeholder="Enter level description"></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="mapSize">Map Size:</label>
+                    <select id="mapSize">
+                        <option value="10">10x10</option>
+                        <option value="15">15x15</option>
+                        <option value="20">20x20</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Player Start Position:</label>
+                    <div class="player-start">
+                        <div>
+                            <label for="playerX">X:</label>
+                            <input type="number" id="playerX" min="0" value="1">
+                        </div>
+                        <div>
+                            <label for="playerZ">Z:</label>
+                            <input type="number" id="playerZ" min="0" value="1">
+                        </div>
+                        <div>
+                            <label for="playerDirection">Direction:</label>
+                            <select id="playerDirection">
+                                <option value="0">North</option>
+                                <option value="1">East</option>
+                                <option value="2">South</option>
+                                <option value="3">West</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-editor">
+                <div class="tools">
+                    <div class="tool-group">
+                        <div class="tool selected" data-tool="wall">
+                            <div class="tool-icon wall"></div>
+                            <div class="tool-name">Wall</div>
+                        </div>
+                        <div class="tool" data-tool="empty">
+                            <div class="tool-icon empty"></div>
+                            <div class="tool-name">Empty</div>
+                        </div>
+                        <div class="tool" data-tool="trap">
+                            <div class="tool-icon trap"></div>
+                            <div class="tool-name">Trap</div>
+                        </div>
+                        <div class="tool" data-tool="stairs-up">
+                            <div class="tool-icon stairs-up">🔼</div>
+                            <div class="tool-name">Stairs Up</div>
+                        </div>
+                        <div class="tool" data-tool="stairs-down">
+                            <div class="tool-icon stairs-down">🔽</div>
+                            <div class="tool-name">Stairs Down</div>
+                        </div>
+                        <div class="tool" data-tool="player">
+                            <div class="tool-icon player"></div>
+                            <div class="tool-name">Player Start</div>
+                        </div>
+                        <div class="tool" data-tool="wallFeature">
+                            <div class="tool-icon wall-feature"></div>
+                            <div class="tool-name">Wall Feature</div>
+                        </div>
+                    </div>
+                    
+                    <div id="wallFeaturesPanel">
+                        <div class="wall-features-header">Feature Type:</div>
+                        <div class="feature-tools">
+                            <div class="wall-feature selected" data-feature="none">
+                                <div class="feature-icon none">✖</div>
+                                <div class="feature-name">None</div>
+                            </div>
+                            <div class="wall-feature" data-feature="torch">
+                                <div class="feature-icon torch">🔥</div>
+                                <div class="feature-name">Torch</div>
+                            </div>
+                            <div class="wall-feature" data-feature="door">
+                                <div class="feature-icon door">🚪</div>
+                                <div class="feature-name">Door</div>
+                            </div>
+                            <div class="wall-feature" data-feature="painting">
+                                <div class="feature-icon painting">🖼️</div>
+                                <div class="feature-name">Painting</div>
+                            </div>
+                        </div>
+                        
+                        <div class="wall-features-header">Wall Direction:</div>
+                        <div class="direction-tools">
+                            <div class="wall-direction selected" data-direction="north">
+                                <div class="direction-icon">▲</div>
+                                <div class="direction-name">North</div>
+                            </div>
+                            <div class="wall-direction" data-direction="east">
+                                <div class="direction-icon">▶</div>
+                                <div class="direction-name">East</div>
+                            </div>
+                            <div class="wall-direction" data-direction="south">
+                                <div class="direction-icon">▼</div>
+                                <div class="direction-name">South</div>
+                            </div>
+                            <div class="wall-direction" data-direction="west">
+                                <div class="direction-icon">◀</div>
+                                <div class="direction-name">West</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid-container">
+                    <div id="mapGrid" class="map-grid"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-bar">
+            <div id="statusMessage">Ready</div>
+            <div class="cell-info">
+                <span>Selected: </span>
+                <span id="cellInfo">None</span>
+            </div>
+        </div>
+    </div>
+    
+    <div id="saveModal" class="modal">
+        <div class="modal-content">
+            <h2>Save Level</h2>
+            <div class="input-group">
+                <label for="saveFilename">Filename:</label>
+                <input type="text" id="saveFilename" placeholder="level1">
+                <small>.json will be appended automatically</small>
+            </div>
+            <div class="modal-buttons">
+                <button id="cancelSave">Cancel</button>
+                <button id="confirmSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/editor/editor.js"></script>
+</body>
+</html>

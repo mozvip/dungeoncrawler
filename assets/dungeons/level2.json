@@ -1,0 +1,731 @@
+{
+    "name": "New Level",
+    "description": "A new dungeon level",
+    "map": [
+        [
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            }
+        ],
+        [
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            }
+        ],
+        [
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            }
+        ],
+        [
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "trap",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "trap",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            }
+        ],
+        [
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "trap",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            }
+        ],
+        [
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            }
+        ],
+        [
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            }
+        ],
+        [
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            }
+        ],
+        [
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "empty",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            }
+        ],
+        [
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            },
+            {
+                "type": "wall",
+                "north": null,
+                "south": null,
+                "east": null,
+                "west": null
+            }
+        ]
+    ],
+    "playerStart": {
+        "x": 5,
+        "z": 8,
+        "direction": 0
+    }
+}
