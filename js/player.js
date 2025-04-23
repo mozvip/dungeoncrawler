@@ -327,16 +327,21 @@ class Player {
         if (this.direction === 3) return { x: this.x, z: this.z - 1 }; // West
     }
 
-    // Update the compass display
+    // Update the compass display to match the player's direction
     updateCompass() {
         const directions = ['north', 'east', 'south', 'west'];
-        
+        const compassElements = document.querySelectorAll('#compass .direction');
+
         // Reset all directions
-        directions.forEach(dir => {
-            document.getElementById(dir).style.color = '#fff';
+        compassElements.forEach(element => {
+            element.classList.remove('active');
         });
         
-        // Highlight current direction
-        document.getElementById(directions[this.direction]).style.color = '#ff0';
+        // Activate the current direction
+        const currentDirection = directions[this.direction];
+        const activeElement = document.getElementById(currentDirection);
+        if (activeElement) {
+            activeElement.classList.add('active');
+        }
     }
 }

@@ -524,29 +524,40 @@ class Game {
         
         // Movement requires a cooldown of 200ms between actions
         if (this.movementCooldown <= 0) {
+            let moved = false;
+            
             if (this.keys.forward && this.player.moveForward()) {
+                moved = true;
                 this.movementCooldown = 200;
                 this.soundManager.playStepSound();
             } else if (this.keys.backward && this.player.moveBackward()) {
+                moved = true;
                 this.movementCooldown = 200;
                 this.soundManager.playStepSound();
             } else if (this.keys.left && this.player.strafeLeft()) {
+                moved = true;
                 this.movementCooldown = 200;
                 this.soundManager.playStepSound();
             } else if (this.keys.right && this.player.strafeRight()) {
+                moved = true;
                 this.movementCooldown = 200;
                 this.soundManager.playStepSound();
             }
+            
+            // Check for stair interactions if the player moved
+            if (moved) {
+                this.checkStairs();
+            }
         }
         
-        // Turning requires a cooldown of 150ms between actions
+        // Turning has its own cooldown
         if (this.turnCooldown <= 0) {
-            if (this.keys.turnLeft) {
-                this.player.turnLeft();
-                this.turnCooldown = 150;
-            } else if (this.keys.turnRight) {
-                this.player.turnRight();
-                this.turnCooldown = 150;
+            if (this.keys.turnLeft && this.player.turnLeft()) {
+                this.turnCooldown = 250;
+                this.soundManager.playTurnSound();
+            } else if (this.keys.turnRight && this.player.turnRight()) {
+                this.turnCooldown = 250;
+                this.soundManager.playTurnSound();
             }
         }
     }
@@ -586,6 +597,102 @@ class Game {
                 head.rotation.z = Math.sin(torch.time * 2) * 0.1;
             }
         }
+    }
+
+    // Check if the player is standing on stairs and handle level transition
+    checkStairs() {
+        // Get the current cell type that the player is standing on
+        const playerX = Math.floor(this.player.x);
+        const playerZ = Math.floor(this.player.z);
+        
+        if (playerX >= 0 && playerX < this.dungeon.map.length && 
+            playerZ >= 0 && playerZ < this.dungeon.map[playerX].length) {
+            
+            const cellType = this.dungeon.map[playerX][playerZ].type;
+            
+            if (cellType === "stairs-up") {
+                // Calculate the previous level
+                const currentLevel = this.dungeon.currentLevel;
+                const levelNum = parseInt(currentLevel.replace("level", ""));
+                
+                if (levelNum > 1) {
+                    // Go up to the previous level (lower number)
+                    const previousLevel = `level${levelNum - 1}`;
+                    this.changeLevel(previousLevel);
+                } else {
+                    console.log("You're already on the first level, can't go up further.");
+                }
+            } else if (cellType === "stairs-down") {
+                // Calculate the next level
+                const currentLevel = this.dungeon.currentLevel;
+                const levelNum = parseInt(currentLevel.replace("level", ""));
+                
+                // Go down to the next level (higher number)
+                const nextLevel = `level${levelNum + 1}`;
+                this.changeLevel(nextLevel);
+            }
+        }
+    }
+    
+    // Change the current level
+    async changeLevel(levelName) {
+        console.log(`Changing to level: ${levelName}`);
+        
+        // Clear existing scene elements
+        this.clearScene();
+        
+        // Reset player movement state
+        this.player.isMoving = false;
+        this.player.isRotating = false;
+        
+        // Load new dungeon level
+        this.dungeon.currentLevel = levelName;
+        await this.dungeon.createDungeon(this.scene);
+        
+        // Get player start position from new level
+        const playerStart = this.dungeon.getPlayerStart();
+        
+        // Set player position and direction from level data
+        this.player.x = playerStart.x;
+        this.player.z = playerStart.z;
+        this.player.direction = playerStart.direction;
+        
+        // Update camera and compass
+        this.player.updateCameraPosition();
+        this.player.updateCompass();
+        
+        // Reset cooldowns
+        this.movementCooldown = 0;
+        this.turnCooldown = 0;
+        
+        // Show dungeon info for the new level
+        this.showDungeonInfo();
+    }
+    
+    // Clear all the scene elements (except the camera) for level transition
+    clearScene() {
+        // Remove all objects from the scene except the camera
+        while (this.scene.children.length > 0) {
+            const object = this.scene.children[0];
+            if (object === this.camera) {
+                // Skip the camera - it should stay in the scene
+                this.scene.remove(this.scene.children[1]);
+            } else {
+                this.scene.remove(object);
+            }
+        }
+        
+        // Re-add the camera if it was removed
+        if (!this.scene.children.includes(this.camera)) {
+            this.scene.add(this.camera);
+        }
+        
+        // Reset torches and projectiles arrays
+        this.torches = [];
+        this.projectiles = [];
+        
+        // Re-setup lighting
+        this.setupLights();
     }
 
     // Display dungeon information on screen

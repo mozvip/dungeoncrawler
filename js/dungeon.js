@@ -106,6 +106,13 @@ class Dungeon {
             metalness: 0.2,
             side: THREE.DoubleSide
         });
+        
+        // Material for stairs
+        const stairMaterial = new THREE.MeshStandardMaterial({
+            color: 0x8B4513,  // Brown color for wooden stairs
+            roughness: 0.7,
+            metalness: 0.1
+        });
 
         // Create walls
         for (let x = 0; x < this.map.length; x++) {
@@ -128,6 +135,17 @@ class Dungeon {
                     
                     // Process wall face attributes (north, south, east, west)
                     this.processWallFeatures(scene, x, z, cell);
+                } else if (cellType === "stairs-up" || cellType === "stairs-down") {
+                    // Create stairs
+                    this.createStairs(scene, x, z, stairMaterial, cellType === "stairs-up");
+                    
+                    // Add ceiling above stairs
+                    const ceilingGeometry = new THREE.PlaneGeometry(1, 1);
+                    const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+                    ceiling.rotation.x = Math.PI / 2;
+                    ceiling.position.set(x, this.wallHeight, z);
+                    ceiling.receiveShadow = true;
+                    scene.add(ceiling);
                 } else {
                     // For all walkable spaces ("empty" = normal floor, "trap" = trap)
                     
@@ -202,178 +220,40 @@ class Dungeon {
                 break;
         }
         
-        // Create different features based on type
-        switch (featureType) {
-            case 'door':
-                this.createDoor(scene, posX, posZ, rotation);
-                break;
-            case 'torch':
-                this.createTorch(scene, posX, posZ, rotation);
-                break;
-            case 'painting':
-                this.createPainting(scene, posX, posZ, rotation);
-                break;
-            // Add more feature types as needed
-            default:
-                console.warn(`Unknown wall feature type: ${featureType}`);
+        const featureMap = {
+            door: createDoor,
+            torch: createTorch,
+            painting: createPainting,
+            // Add more features here
+        };
+
+        const featureFn = featureMap[featureType];
+        if (featureFn) {
+            featureFn(scene, posX, posZ, rotation, this); // Pass dungeon instance for context if needed
+        } else {
+            console.warn(`Unknown wall feature type: ${featureType}`);
         }
-    }
-    
-    // Example feature creation methods
-    createDoor(scene, x, z, rotation) {
-        // Placeholder for door creation
-        const doorGeometry = new THREE.BoxGeometry(0.8, 0.9, 0.1);
-        const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
-        const door = new THREE.Mesh(doorGeometry, doorMaterial);
-        
-        door.position.set(x, this.wallHeight/2, z);
-        door.rotation.y = rotation;
-        scene.add(door);
-    }
-    
-    createTorch(scene, x, z, rotation) {
-        // Placeholder for torch creation
-        const torchGroup = new THREE.Group();
-        
-        // Torch handle
-        const handleGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.3, 8);
-        const handleMaterial = new THREE.MeshStandardMaterial({ color: 0x4b2822 });
-        const handle = new THREE.Mesh(handleGeometry, handleMaterial);
-        handle.position.y = this.wallHeight/2;
-        
-        // Torch flame
-        const flameGeometry = new THREE.ConeGeometry(0.05, 0.15, 8);
-        const flameMaterial = new THREE.MeshBasicMaterial({ color: 0xff7700 });
-        const flame = new THREE.Mesh(flameGeometry, flameMaterial);
-        flame.position.y = this.wallHeight/2 + 0.2;
-        
-        // Add to group
-        torchGroup.add(handle);
-        torchGroup.add(flame);
-        
-        // Add torch light
-        const torchLight = new THREE.PointLight(0xff5500, 1, 3);
-        torchLight.position.y = this.wallHeight/2 + 0.2;
-        torchGroup.add(torchLight);
-        
-        // Position and rotate the torch group
-        torchGroup.position.set(x, 0, z);
-        torchGroup.rotation.y = rotation;
-        
-        // Adjust position to be flush with wall
-        const offset = 0.51; // Slightly more than half the wall thickness
-        switch (Math.round((rotation / (Math.PI/2)) % 4)) {
-            case 0: // North
-                torchGroup.position.z += offset;
-                break;
-            case 2: case -2: // South
-                torchGroup.position.z -= offset;
-                break;
-            case 1: case -3: // East
-                torchGroup.position.x -= offset;
-                break;
-            case 3: case -1: // West
-                torchGroup.position.x += offset;
-                break;
-        }
-        
-        scene.add(torchGroup);
-        
-        // Store torch for animation
-        if (!this.torches) this.torches = [];
-        this.torches.push({
-            flame,
-            light: torchLight,
-            time: Math.random() * Math.PI * 2
-        });
-    }
-    
-    createPainting(scene, x, z, rotation) {
-        // Placeholder for painting creation
-        const frameGeometry = new THREE.BoxGeometry(0.5, 0.4, 0.05);
-        const frameMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
-        const frame = new THREE.Mesh(frameGeometry, frameMaterial);
-        
-        frame.position.set(x, this.wallHeight/2, z);
-        frame.rotation.y = rotation;
-        
-        // Adjust position to be flush with wall
-        const offset = 0.525; // Slightly more than half the wall thickness
-        switch (Math.round((rotation / (Math.PI/2)) % 4)) {
-            case 0: // North
-                frame.position.z += offset;
-                break;
-            case 2: case -2: // South
-                frame.position.z -= offset;
-                break;
-            case 1: case -3: // East
-                frame.position.x -= offset;
-                break;
-            case 3: case -1: // West
-                frame.position.x += offset;
-                break;
-        }
-        
-        scene.add(frame);
     }
 
     // Create a pit/hole for a floor trap
     createPit(scene, x, z, pitWallMaterial) {
-        const pitDepth = 2; // How deep the pit goes
-        const pitSize = 0.8; // Slightly smaller than a full tile to create a ledge
+        // Use the PitMesh class to create the pit
+        const pit = PitMesh.create(x, z, pitWallMaterial);
         
-        // Create the pit geometry
-        const pitGroup = new THREE.Group();
+        // Add the pit group to the scene
+        scene.add(pit.group);
         
-        // Bottom of the pit
-        const pitBottomGeometry = new THREE.PlaneGeometry(pitSize, pitSize);
-        const pitBottom = new THREE.Mesh(pitBottomGeometry, pitWallMaterial);
-        pitBottom.rotation.x = -Math.PI / 2;
-        pitBottom.position.set(0, -pitDepth, 0);
-        pitGroup.add(pitBottom);
-        
-        // Walls of the pit - using thin boxes for the four sides
-        // North wall
-        const northWallGeometry = new THREE.BoxGeometry(pitSize, pitDepth, 0.05);
-        const northWall = new THREE.Mesh(northWallGeometry, pitWallMaterial);
-        northWall.position.set(0, -pitDepth/2, -pitSize/2);
-        pitGroup.add(northWall);
-        
-        // South wall
-        const southWallGeometry = new THREE.BoxGeometry(pitSize, pitDepth, 0.05);
-        const southWall = new THREE.Mesh(southWallGeometry, pitWallMaterial);
-        southWall.position.set(0, -pitDepth/2, pitSize/2);
-        pitGroup.add(southWall);
-        
-        // East wall
-        const eastWallGeometry = new THREE.BoxGeometry(0.05, pitDepth, pitSize);
-        const eastWall = new THREE.Mesh(eastWallGeometry, pitWallMaterial);
-        eastWall.position.set(pitSize/2, -pitDepth/2, 0);
-        pitGroup.add(eastWall);
-        
-        // West wall
-        const westWallGeometry = new THREE.BoxGeometry(0.05, pitDepth, pitSize);
-        const westWall = new THREE.Mesh(westWallGeometry, pitWallMaterial);
-        westWall.position.set(-pitSize/2, -pitDepth/2, 0);
-        pitGroup.add(westWall);
-        
-        // Position the entire pit in the world
-        pitGroup.position.set(x, 0, z);
-        scene.add(pitGroup);
-        
-        // Add lighting effect inside the pit
-        const pitLight = new THREE.PointLight(0xff3300, 0.7, 2);
-        pitLight.position.set(x, -pitDepth/2, z);
-        scene.add(pitLight);
+        // Add the pit light to the scene
+        scene.add(pit.light);
         
         // Store reference for animation
         if (!this.trapLights) this.trapLights = [];
         this.trapLights.push({
-            light: pitLight,
-            x: x,
-            z: z,
-            pulseSpeed: 0.5 + Math.random() * 0.5,
-            time: Math.random() * Math.PI * 2
+            light: pit.light,
+            x: pit.lightData.x,
+            z: pit.lightData.z,
+            pulseSpeed: pit.lightData.pulseSpeed,
+            time: pit.lightData.time
         });
     }
     
@@ -408,6 +288,29 @@ class Dungeon {
         }
         
         // Check if the position is a walkable tile (not a wall)
-        return this.map[x][z].type === "empty" || this.map[x][z].type === "trap";
+        return this.map[x][z].type === "empty" || 
+               this.map[x][z].type === "trap" || 
+               this.map[x][z].type === "stairs-up" || 
+               this.map[x][z].type === "stairs-down";
+    }
+
+    // Create stairs
+    createStairs(scene, x, z, material, isUp) {
+        // Use the StairsMesh class to create the stairs
+        const stairs = StairsMesh.create(x, z, material, isUp);
+        
+        // Add the stairs group to the scene
+        scene.add(stairs);
+    }
+
+    // Get wall feature offset based on rotation
+    getWallFeatureOffset(rotation, offset) {
+        switch (Math.round((rotation / (Math.PI/2)) % 4)) {
+            case 0: return { x: 0, z: offset };      // North
+            case 2: case -2: return { x: 0, z: -offset }; // South
+            case 1: case -3: return { x: -offset, z: 0 }; // East
+            case 3: case -1: return { x: offset, z: 0 };  // West
+            default: return { x: 0, z: 0 };
+        }
     }
 }

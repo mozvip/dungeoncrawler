@@ -721,11 +721,12 @@
                 "west": null
             },
             {
-                "type": "empty",
+                "type": "stairs-down",
                 "north": null,
                 "south": null,
                 "east": null,
-                "west": null
+                "west": null,
+                "stairDirection": "down"
             },
             {
                 "type": "empty",
@@ -2567,11 +2568,12 @@
                 "west": null
             },
             {
-                "type": "empty",
+                "type": "stairs-up",
                 "north": null,
                 "south": null,
                 "east": null,
-                "west": null
+                "west": null,
+                "stairDirection": "up"
             },
             {
                 "type": "empty",
@@ -2846,6 +2848,6 @@
     "playerStart": {
         "x": 1,
         "z": 1,
-        "direction": 0
+        "direction": 1
     }
 }
