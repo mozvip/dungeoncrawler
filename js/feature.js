@@ -1,6 +1,7 @@
+import * as THREE from 'three';
 // Feature creation functions for dungeon walls
 
-function createDoor(scene, x, z, rotation) {
+export function createDoor(scene, x, z, rotation) {
     // Placeholder for door creation
     const doorGeometry = new THREE.BoxGeometry(0.8, 0.9, 0.1);
     const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
@@ -12,7 +13,7 @@ function createDoor(scene, x, z, rotation) {
     scene.add(door);
 }
 
-function createTorch(scene, x, z, rotation, dungeon) {
+export function createTorch(scene, x, z, rotation, dungeon) {
     // Placeholder for torch creation
     const torchGroup = new THREE.Group();
 
@@ -58,7 +59,7 @@ function createTorch(scene, x, z, rotation, dungeon) {
     });
 }
 
-function createPainting(scene, x, z, rotation, dungeon) {
+export function createPainting(scene, x, z, rotation, dungeon) {
     // Placeholder for painting creation
     const frameGeometry = new THREE.BoxGeometry(0.5, 0.4, 0.05);
     const frameMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });

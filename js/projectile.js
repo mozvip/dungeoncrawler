@@ -1,4 +1,5 @@
-class Projectile {
+import * as THREE from 'three';
+export class Projectile {
     constructor(scene, position, direction, speed = 0.15, lifetime = 3000) {
         this.scene = scene;
         this.position = { ...position };

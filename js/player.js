@@ -1,4 +1,4 @@
-class Player {
+export class Player {
     constructor(dungeon) {
         this.dungeon = dungeon;
         
@@ -343,5 +343,26 @@ class Player {
         if (activeElement) {
             activeElement.classList.add('active');
         }
+    }
+
+    // Call this after creating the player mesh
+    attachSwordToPlayer() {
+        // Use global OBJLoader if available
+        const loader = new window.OBJLoader ? new window.OBJLoader() : new OBJLoader();
+        loader.load(
+            'assets/items/Sting-Sword-lowpoly.obj',
+            (obj) => {
+                obj.scale.set(0.08, 0.08, 0.08);
+                obj.rotation.x = Math.PI / 2;
+                obj.rotation.z = Math.PI / 2;
+                obj.position.set(0.25, -0.1, 0.2); // Adjust as needed for right hand
+
+                // Optionally, set material or color here
+            },
+            undefined,
+            (err) => {
+                console.error('Failed to load sword OBJ:', err);
+            }
+        );
     }
 }

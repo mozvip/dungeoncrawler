@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Three.js Dungeon Crawler</title>
     <link rel="stylesheet" href="css/style.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.132.2/examples/jsm/"
+        }
+    }
+    </script>    
 </head>
 <body>
     <div id="game-container">
@@ -22,18 +30,17 @@
         </div>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
-    <script src="js/sound.js"></script>
-    <script src="js/meshes/StairsMesh.js"></script>
-    <script src="js/meshes/PitMesh.js"></script>
-    <script src="js/feature.js"></script>
-    <script src="js/projectile.js"></script>
-    <script src="js/projectiles/Fireball.js"></script>
-    <script src="js/projectiles/IceArrow.js"></script>
-    <script src="js/projectiles/Lightning.js"></script>
-    <script src="js/projectiles/GasCloud.js"></script>
-    <script src="js/dungeon.js"></script>
-    <script src="js/player.js"></script>
-    <script src="js/game.js"></script>
+    <script type="module" src="js/sound.js"></script>
+    <script type="module" src="js/meshes/StairsMesh.js"></script>
+    <script type="module" src="js/meshes/PitMesh.js"></script>
+    <script type="module" src="js/feature.js"></script>
+    <script type="module" src="js/projectile.js"></script>
+    <script type="module" src="js/projectiles/Fireball.js"></script>
+    <script type="module" src="js/projectiles/IceArrow.js"></script>
+    <script type="module" src="js/projectiles/Lightning.js"></script>
+    <script type="module" src="js/projectiles/GasCloud.js"></script>
+    <script type="module" src="js/dungeon.js"></script>
+    <script type="module" src="js/player.js"></script>
+    <script type="module" src="js/game.js"></script>
 </body>
 </html>

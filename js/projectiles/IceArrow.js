@@ -1,5 +1,8 @@
+import * as THREE from 'three';
+import { Projectile } from '../projectile.js';
+
 // filepath: /mnt/Apps/github.com/mozvip/dunwich/js/projectiles/IceArrow.js
-class IceArrow extends Projectile {
+export class IceArrow extends Projectile {
     constructor(scene, position, direction, speed = 0.2, lifetime = 3000) {
         super(scene, position, direction, speed, lifetime);
     }

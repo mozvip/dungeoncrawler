@@ -1,5 +1,8 @@
+import * as THREE from 'three';
+import { Projectile } from '../projectile.js';
+
 // filepath: /mnt/Apps/github.com/mozvip/dunwich/js/projectiles/Lightning.js
-class Lightning extends Projectile {
+export class Lightning extends Projectile {
     constructor(scene, position, direction, speed = 0.25, lifetime = 2000) {
         super(scene, position, direction, speed, lifetime);
     }

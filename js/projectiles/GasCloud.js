@@ -1,5 +1,8 @@
+import * as THREE from 'three';
+import { Projectile } from '../projectile.js';
+
 // filepath: /mnt/Apps/github.com/mozvip/dunwich/js/projectiles/GasCloud.js
-class GasCloud extends Projectile {
+export class GasCloud extends Projectile {
     constructor(scene, position, direction, speed = 0.08, lifetime = 4000) {
         super(scene, position, direction, speed, lifetime);
         this.particles = [];

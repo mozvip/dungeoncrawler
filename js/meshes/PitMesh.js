@@ -1,8 +1,10 @@
+import * as THREE from 'three';
+
 /**
  * PitMesh.js - Handles the creation of pit/trap meshes for the dungeon
  */
 
-class PitMesh {
+export class PitMesh {
     /**
      * Create a pit/trap mesh
      * @param {number} x - X coordinate in the dungeon grid

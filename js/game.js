@@ -1,3 +1,12 @@
+import * as THREE from 'three';
+import { Dungeon } from './dungeon.js';
+import { SoundManager } from './sound.js';
+import { Player } from './player.js';
+import { Fireball } from './projectiles/Fireball.js';
+import { IceArrow } from './projectiles/IceArrow.js';
+import { Lightning } from './projectiles/Lightning.js';
+import { GasCloud } from './projectiles/GasCloud.js';
+
 class Game {
     constructor() {
         // Initialize game properties

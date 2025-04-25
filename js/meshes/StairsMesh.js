@@ -1,8 +1,10 @@
+import * as THREE from 'three';
+
 /**
  * StairsMesh.js - Handles the creation of stair meshes for the dungeon
  */
 
-class StairsMesh {
+export class StairsMesh {
     /**
      * Create a stairs mesh
      * @param {number} x - X coordinate in the dungeon grid

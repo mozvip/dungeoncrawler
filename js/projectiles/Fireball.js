@@ -1,5 +1,8 @@
+import * as THREE from 'three';
+import { Projectile } from '../projectile.js';
+
 // filepath: /mnt/Apps/github.com/mozvip/dunwich/js/projectiles/Fireball.js
-class Fireball extends Projectile {
+export class Fireball extends Projectile {
     constructor(scene, position, direction, speed = 0.10, lifetime = 3000) {
         super(scene, position, direction, speed, lifetime);
     }

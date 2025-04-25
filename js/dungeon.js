@@ -1,4 +1,10 @@
-class Dungeon {
+import * as THREE from 'three';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { createDoor, createTorch, createPainting } from './feature.js';
+import { PitMesh } from './meshes/PitMesh.js';
+import { StairsMesh } from './meshes/StairsMesh.js';
+
+export class Dungeon {
     constructor() {
         // Default empty map (will be replaced when loaded)
         this.map = [];

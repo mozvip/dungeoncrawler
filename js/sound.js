@@ -1,4 +1,6 @@
-class SoundManager {
+import * as THREE from 'three';
+
+export class SoundManager {
     constructor(camera) {
         // Audio system
         this.audioListener = null;
